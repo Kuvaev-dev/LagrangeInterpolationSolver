@@ -26,7 +26,7 @@ namespace LagrangeInterpolationSolver.Logic
                 {
                     if (j != i)
                     {
-                        term = term * (epsilon - xValues[j]) / (xValues[i] - xValues[j]);
+                        term *= (epsilon - xValues[j]) / (xValues[i] - xValues[j]);
                         TextViewer.ChangeColor($"\tПідкрок {j + 1}: term = term * ({epsilon} - {xValues[j]}) / ({xValues[i]} - {xValues[j]}) = {term}", "blue");
                     }
                 }
