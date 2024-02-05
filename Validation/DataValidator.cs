@@ -37,9 +37,9 @@ namespace LagrangeInterpolationSolver.Validation
             }
 
             // Перевірка, чи значення epsilon знаходиться в межах значень x
-            if (epsilon < xValues.Min() || epsilon > xValues.Max())
+            if (epsilon <= xValues.Min() || epsilon >= xValues.Max())
             {
-                TextViewer.ChangeColor("ПОМИЛКА: Значення Е має бути в межах значень масиву х.", "red");
+                TextViewer.ChangeColor("ПОМИЛКА: Значення Е має бути включено в межі значень масиву х.", "red");
                 TextViewer.ChangeColor("\nНатисніть \"Enter\" для продовження.", "blue");
                 Console.ReadLine();
                 return false;

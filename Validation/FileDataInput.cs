@@ -1,6 +1,5 @@
-﻿using System;
+﻿using LagrangeInterpolationSolver.View;
 using System.Globalization;
-using System.IO;
 
 namespace LagrangeInterpolationSolver.Validation
 {
@@ -39,7 +38,12 @@ namespace LagrangeInterpolationSolver.Validation
 
             for (int i = 0; i < stringValues.Length; i++)
             {
-                doubleValues[i] = Convert.ToDouble(stringValues[i].Replace(',', '.'), CultureInfo.InvariantCulture);
+                if (!double.TryParse(stringValues[i].Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out double result))
+                {
+                    TextViewer.ChangeColor($"ПОМИЛКА: Некоректний формат значення: {stringValues[i]}", "red");
+                }
+
+                doubleValues[i] = result;
             }
 
             return doubleValues;
