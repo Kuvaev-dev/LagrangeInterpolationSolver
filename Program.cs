@@ -1,18 +1,18 @@
-﻿using LagrangeInterpolationSolver.Logic;
+﻿using System.Text;
+using LagrangeInterpolationSolver.Logic;
 using LagrangeInterpolationSolver.Validation;
 using LagrangeInterpolationSolver.View;
-using System.Text;
 
 class Program
 {
     // Значення x за варіантом:
     // - вручну:
-    // x: 0,9689 1,0587 1,1740 1,3796 1,7152 1,7279 1,7791
-    // y: 1,0000 1,1000 1,2320 1,4796 1,9383 1,9577 2,0380
+    // x: 1,0000 1,1000 1,2320 1,4796 1,9383 1,9577 2,0380
+    // y: 0,9689 1,0587 1,1740 1,3796 1,7152 1,7279 1,7791
     // E: 1,3
     // - з файлу:
-    // x: 0.9689 1.0587 1.1740 1.3796 1.7152 1.7279 1.7791
-    // y: 1.0000 1.1000 1.2320 1.4796 1.9383 1.9577 2.0380
+    // x: 1.0000 1.1000 1.2320 1.4796 1.9383 1.9577 2.0380
+    // y: 0.9689 1.0587 1.1740 1.3796 1.7152 1.7279 1.7791
     // E: 1.3
 
     static void Main()
@@ -84,6 +84,7 @@ class Program
                 try
                 {
                     dataInput = new FileDataInput(filePath);
+                    TextViewer.ChangeColor("\nРозв'язання", "blue");
                 }
                 catch (Exception ex)
                 {
@@ -146,20 +147,17 @@ class Program
     {
         // Збереження початкових даних та результату до текстового файлу
         string filePath = "Calculations.txt";
-        using (StreamWriter writer = new(filePath))
-        {
-            writer.WriteLine($"Масив X: {string.Join(" ", xValues)}");
-            writer.WriteLine($"Масив Y: {string.Join(" ", yValues)}");
-            writer.WriteLine($"E: {epsilon}");
-            writer.WriteLine($"Результат інтерполяції: {result}");
-        }
-        TextViewer.ChangeColor($"\nРезультати збережено до текстового файлу.\nШлях: {GetProjectDirectory()}", "blue");
-    }
+        using StreamWriter writer = new(filePath);
+        writer.WriteLine($"Масив X: {string.Join(" ", xValues)}");
+        writer.WriteLine($"Масив Y: {string.Join(" ", yValues)}");
+        writer.WriteLine($"E: {epsilon}");
 
-    static string GetProjectDirectory()
-    {
-        string assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
-        string projectDirectory = Path.GetDirectoryName(Path.GetDirectoryName(assemblyLocation));
-        return projectDirectory;
+        writer.WriteLine("\nПроміжкові значення на кожному кроці:");
+        for (int i = 0; i < xValues.Length; i++)
+        {
+            writer.WriteLine($"Крок {i + 1}: {LagrangeInterpolation.Interpolate(xValues[..(i + 1)], yValues[..(i + 1)], epsilon)}");
+        }
+
+        writer.WriteLine($"Результат інтерполяції: {result}");
     }
 }
