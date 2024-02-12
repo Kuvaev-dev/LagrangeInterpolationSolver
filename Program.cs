@@ -122,10 +122,16 @@ class Program
                     if (saveChoice.ToLower() == "y")
                     {
                         SaveCalculationsToFile(xValues, yValues, epsilon, result);
+                        Console.WriteLine("Результати збережено до текстового файлу.");
+                        Console.WriteLine($"Шлях: {GetProjectDirectory()}");
+                        Console.WriteLine("Натисніть \"Enter\" для виходу до меню...");
+                        Console.ReadLine();
                     }
-
-                    TextViewer.ChangeColor("\nНатисніть \"Enter\" для виходу до меню...", "blue");
-                    Console.ReadLine();
+                    else
+                    {
+                        Console.WriteLine("\nНатисніть \"Enter\" для виходу до меню...");
+                        Console.ReadLine();
+                    }
                     break;
                 }
                 else
@@ -147,17 +153,27 @@ class Program
     {
         // Збереження початкових даних та результату до текстового файлу
         string filePath = "Calculations.txt";
-        using StreamWriter writer = new(filePath);
-        writer.WriteLine($"Масив X: {string.Join(" ", xValues)}");
-        writer.WriteLine($"Масив Y: {string.Join(" ", yValues)}");
-        writer.WriteLine($"E: {epsilon}");
-
-        writer.WriteLine("\nПроміжкові значення на кожному кроці:");
-        for (int i = 0; i < xValues.Length; i++)
+        using (StreamWriter writer = new(filePath))
         {
-            writer.WriteLine($"Крок {i + 1}: {LagrangeInterpolation.Interpolate(xValues[..(i + 1)], yValues[..(i + 1)], epsilon)}");
-        }
+            writer.WriteLine($"Масив X: {string.Join(" ", xValues)}");
+            writer.WriteLine($"Масив Y: {string.Join(" ", yValues)}");
+            writer.WriteLine($"E: {epsilon}");
 
-        writer.WriteLine($"Результат інтерполяції: {result}");
+            writer.WriteLine("\nПроміжкові значення на кожному кроці:");
+            for (int i = 0; i < xValues.Length; i++)
+            {
+                writer.WriteLine($"Крок {i + 1}: {LagrangeInterpolation.Interpolate(xValues[..(i + 1)], yValues[..(i + 1)], epsilon)}");
+            }
+
+            writer.WriteLine($"Результат інтерполяції: {result}");
+        }
+        Console.Clear();
+    }
+
+    static string GetProjectDirectory()
+    {
+        string assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
+        string projectDirectory = Path.GetDirectoryName(Path.GetDirectoryName(assemblyLocation));
+        return projectDirectory;
     }
 }
